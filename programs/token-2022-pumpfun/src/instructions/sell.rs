@@ -27,25 +27,12 @@ pub struct Sell<'info> {
     )]
     pub global_configuration: Account<'info, InitializeConfiguration>,
 
-    #[account(
-        mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
-        bump,
-    )]
-    /// CHECK:
-    pub sol_pool: AccountInfo<'info>,
-
     #[account(        
         mut,
         seeds = [BondingCurve::POOL_SEED_PREFIX],
         bump,
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
-
-    pub token_program: Program<'info, Token>,
-
-    #[account(mut)]
-    pub payer: Signer<'info>,    
 
     #[account(mut)]
     pub mint_addr: Box<Account<'info, Mint>>,
@@ -57,16 +44,30 @@ pub struct Sell<'info> {
     )]
     pub user_ata: Box<Account<'info, TokenAccount>>,
 
+    #[account(
+        mut,
+        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
+        bump,
+    )]
+    /// CHECK:
+    pub sol_pool: AccountInfo<'info>,
+
     #[account(       
         mut,         
         associated_token::mint = mint_addr,
         associated_token::authority = sol_pool
     )]
     pub token_pool: Box<Account<'info, TokenAccount>>,
-    /// CHECK:
-    pub fee_account: AccountInfo<'info>,
+   
+     pub fee_account: AccountInfo<'info>,
 
-    pub system_program: Program<'info, System>,
+   
+
+    #[account(mut)]
+    pub payer: Signer<'info>,    
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>
+    
 }
 
 impl<'info> Sell<'info> {

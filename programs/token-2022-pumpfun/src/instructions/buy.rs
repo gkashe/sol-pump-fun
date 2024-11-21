@@ -33,6 +33,16 @@ pub struct Buy<'info> {
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
 
+    #[account(mut)]
+    pub mint_addr: Box<Account<'info, Mint>>,
+
+    #[account(
+        mut,
+        associated_token::mint = mint_addr,
+        associated_token::authority = payer,
+    )]
+    pub user_ata: Box<Account<'info, TokenAccount>>,
+
     #[account(
         mut,
         seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
@@ -48,20 +58,12 @@ pub struct Buy<'info> {
     )]
     pub token_pool: Box<Account<'info, TokenAccount>>,
 
+     pub fee_account: AccountInfo<'info>,
+
     #[account(mut)]
     pub payer: Signer<'info>,
 
-    #[account(mut)]
-    pub mint_addr: Box<Account<'info, Mint>>,
-
-    #[account(
-        mut,
-        associated_token::mint = mint_addr,
-        associated_token::authority = payer,
-    )]
-    pub user_ata: Box<Account<'info, TokenAccount>>,
     /// CHECK:
-    pub fee_account: AccountInfo<'info>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
 
