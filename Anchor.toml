@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-token_2022_pumpfun = "DKzDDvhAd8L4uatXE6ykYPFdVWknqgE2LuBFMGZUoMEZ"
+token_2022_pumpfun = "HjUotZMTaso8hy6kbXATt43gQZW1v3B3mgkWwcwRXmkD"
 
 [registry]
 url = "https://api.apr.dev"
@@ -16,12 +16,13 @@ cluster = "Devnet"
 wallet = "./id.json"
 
 [scripts]
+is-initialized = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g Is initialized!"
+add-liquidity = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g add liquidity"
+airdrop = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g Airdrop to admin wallet"
+buy = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g buy"
 create-pool = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g create pool"
 mint = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g token-mint"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g "
-add-liquidity = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g add liquidity"
-buy = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g buy"
-airdrop = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g Airdrop to admin wallet"
 
 [test]
 startup_wait = 20000

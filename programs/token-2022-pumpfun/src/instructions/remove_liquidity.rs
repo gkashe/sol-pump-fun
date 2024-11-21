@@ -33,7 +33,9 @@ pub struct RemoveLiquidity<'info> {
     pub amm_coin_mint: Box<Account<'info, Mint>>,
     #[account(
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX, amm_coin_mint.key().as_ref()],
+        seeds = [
+            b"sol_pool", amm_coin_mint.key().as_ref()
+        ],
         bump,
     )]
     /// CHECK:

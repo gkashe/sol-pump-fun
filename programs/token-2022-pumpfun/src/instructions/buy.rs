@@ -18,7 +18,7 @@ use crate::{
 };
 
 #[derive(Accounts)]
-#[instruction(in_amount: u64, bump: u8)]
+#[instruction(in_amount: u64)]
 pub struct Buy<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
@@ -56,7 +56,7 @@ pub struct Buy<'info> {
         ],
         bump,
     )]
-    pub sol_pool: SystemAccount<'info>,
+    pub sol_pool: AccountInfo<'info>,
 
     #[account(       
         mut,         
@@ -98,7 +98,7 @@ impl<'info> Buy<'info> {
 
         let transfer_instruction = system_instruction::transfer(
             &self.payer.to_account_info().key(),
-            &self.sol_pool.to_account_info().key(),
+            &self.sol_pool.key().clone(),
             (in_amount as f32 * (100.0 - self.global_configuration.swap_fee.clone()) / 100.0)
                 as u64,
         );
@@ -107,7 +107,7 @@ impl<'info> Buy<'info> {
             &transfer_instruction,
             &[
                 self.payer.to_account_info(),
-                self.sol_pool.to_account_info(),
+                self.sol_pool.clone(),
                 self.system_program.to_account_info(),
             ],
         )?;
@@ -143,8 +143,8 @@ impl<'info> Buy<'info> {
                     mint: self.mint_addr.to_account_info(),
                 },
                 &[&[
-                    &self.mint_addr.key().to_bytes(), // Mint address seed
                     b"sol_pool",
+                    &self.mint_addr.key().to_bytes(), // Mint address seed
                     &[bump], // Constant seed
                 ]],
             ),

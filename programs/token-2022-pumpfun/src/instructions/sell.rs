@@ -44,9 +44,11 @@ pub struct Sell<'info> {
     )]
     pub user_ata: Box<Account<'info, TokenAccount>>,
 
-    #[account(
+     #[account(
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
+        seeds = [
+            b"sol_pool", mint_addr.key().as_ref()
+        ],
         bump,
     )]
     /// CHECK:
@@ -61,9 +63,7 @@ pub struct Sell<'info> {
    
     /// CHECK:
     pub fee_account: AccountInfo<'info>,
-
-   
-
+    
     #[account(mut)]
     pub payer: Signer<'info>,    
     pub token_program: Program<'info, Token>,

@@ -1,8 +1,7 @@
 use anchor_lang::{
     prelude::*,
-    solana_program::{        
-        system_instruction::{self, transfer},
-    },
+    solana_program::system_instruction::{self, transfer},
+    
 };
 use anchor_spl::{
     associated_token::AssociatedToken,
@@ -10,9 +9,8 @@ use anchor_spl::{
     token_2022::Token2022
 };
 
-use crate::{
-    states::{BondingCurve, InitializeConfiguration},    
-};
+use crate::
+    states::{BondingCurve, InitializeConfiguration};
 
 #[derive(Accounts)]
 #[instruction(fee_lamports: u64)]
@@ -51,7 +49,8 @@ pub struct CreatePool<'info> {
         ],
         bump,
     )]
-    pub sol_pool: SystemAccount<'info>,
+    /// CHECK:
+    pub sol_pool: AccountInfo<'info>,
     #[account(       
         init,
         payer = payer,       
