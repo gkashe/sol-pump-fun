@@ -4,7 +4,10 @@ use anchor_lang::{
         system_instruction::{self, transfer},
     },
 };
-use anchor_spl::token::Mint;
+use anchor_spl::{
+    associated_token::AssociatedToken,
+    token::{Mint, TokenAccount, Token},
+};
 
 use crate::{
     states::{BondingCurve, InitializeConfiguration},    
@@ -16,31 +19,52 @@ pub struct CreatePool<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
     //  **
-
     #[account(
-        mut,
+        init,
+        space = InitializeConfiguration::SIZE,
+        payer = payer,
         seeds = [InitializeConfiguration::SEEDS],
         bump,
     )]
     pub global_configuration: Account<'info, InitializeConfiguration>,
 
-
-    #[account(mut)]
-    pub payer: Signer<'info>,    
-    /// CHECK:
-    pub fee_account: AccountInfo<'info>,
-
-    pub system_program: Program<'info, System>,
-
-    #[account(mut)]
-    pub mint_addr: Box<Account<'info, Mint>>,
-
     #[account(        
-        mut,
+        init,
+        space = BondingCurve::SIZE,
+        payer = payer,
         seeds = [BondingCurve::POOL_SEED_PREFIX],
         bump,
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
+    #[account(mut)]
+    pub mint_addr: Box<Account<'info, Mint>>,
+    #[account(
+        mut,
+        associated_token::mint = mint_addr,
+        associated_token::authority = payer,
+    )]
+    pub user_ata: Box<Account<'info, TokenAccount>>,
+    #[account(
+        mut,
+        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
+        bump,
+    )]
+    pub sol_pool: AccountInfo<'info>,
+    #[account(       
+        mut,         
+        associated_token::mint = mint_addr,
+        associated_token::authority = sol_pool
+    )]
+    pub token_pool: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub fee_account: AccountInfo<'info>,
+    
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+
+    
 }
 
 impl<'info> CreatePool<'info> {
