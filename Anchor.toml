@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-token_2022_pumpfun = "5VD3y7hTmCqoGodiFZKBXqbaCWTm3iVwuLowxfhE6b7h"
+token_2022_pumpfun = "48nawmH6Wc5DF48DaFPeRfBCwfpM7uCsoNtxQeDD8rjs"
 
 [registry]
 url = "https://api.apr.dev"

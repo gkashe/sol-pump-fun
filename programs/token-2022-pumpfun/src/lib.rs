@@ -10,7 +10,7 @@ pub mod utils;
 use crate::consts::*;
 use crate::instructions::*;
 
-declare_id!("5VD3y7hTmCqoGodiFZKBXqbaCWTm3iVwuLowxfhE6b7h");
+declare_id!("48nawmH6Wc5DF48DaFPeRfBCwfpM7uCsoNtxQeDD8rjs");
 
 #[program]
 pub mod token_2022_pumpfun {
