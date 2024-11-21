@@ -116,6 +116,7 @@ describe("token-2022-pumpfun", () => {
       NATIVE_MINT,
       payer.publicKey
     );
+    console.log(userNativeAta);
 
     // mintAddr = Keypair.generate();
     // const mintsig = await createMint(
@@ -382,74 +383,78 @@ describe("token-2022-pumpfun", () => {
     console.log(sig);
   });
 
-  // it("buy", async () => {
-  //   const [globalConfiguration] = PublicKey.findProgramAddressSync(
-  //     [Buffer.from("global_config")],
-  //     program.programId
-  //   );
-  //   const [bondingCurve] = PublicKey.findProgramAddressSync(
-  //     [mintAddr.publicKey.toBuffer(), Buffer.from("bonding_curve")],
-  //     program.programId
-  //   );
-  //   const [solPool] = PublicKey.findProgramAddressSync(
-  //     [mintAddr.publicKey.toBuffer(), Buffer.from("sol_pool")],
-  //     program.programId
-  //   );
-  //   const tokenPool = await getAssociatedTokenAddress(
-  //     mintAddr.publicKey,
-  //     solPool,
-  //     true,
-  //     TOKEN_2022_PROGRAM_ID
-  //   );
-
-  //   const bunding = await program.account.bondingCurve.fetch(bondingCurve);
-  //   const price = bunding.virtualSolReserves.div(bunding.virtualTokenReserves);
-
-  //   console.log(
-  //     await program.account.initializeConfiguration.fetch(globalConfiguration)
-  //   );
-  //   console.log(
-  //     "bunding == > ",
-  //     bunding.virtualSolReserves,
-  //     bunding.virtualTokenReserves
-  //   );
-  //   console.log("bunding == > ", price);
-  //   // Add your test here.
-  //   const tx = await program.methods
-  //     .buy(new BN(8 * LAMPORTS_PER_SOL)) //   buy 0.1 sol
-  //     .accounts({
-  //       globalConfiguration: globalConfiguration,
-  //       bondingCurve: bondingCurve,
-  //       mintAddr: mintAddr.publicKey,
-  //       userAta: userAta,
-  //       solPool: solPool,
-  //       tokenPool: tokenPool,
-  //       feeAccount: feeAccount.publicKey,
-  //       tokenProgram: TOKEN_2022_PROGRAM_ID,
-  //     })
-  //     .signers([payer])
-  //     .transaction();
-
-  //   tx.feePayer = payer.publicKey;
-  //   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-
-  //   console.log(await connection.simulateTransaction(tx));
-
-  //   const sig = await sendAndConfirmTransaction(connection, tx, [payer]);
-  //   console.log(sig);
-  // });
-
-  it("remove liquidity", async () => {
+  it("buy", async () => {
     const [globalConfiguration] = PublicKey.findProgramAddressSync(
       [Buffer.from("global_config")],
       program.programId
     );
     const [bondingCurve] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("bonding_curve")],
+      [Buffer.from("bonding_curve"), mintAddr.publicKey.toBuffer()],
       program.programId
     );
     const [solPool] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("sol_pool")],
+      [Buffer.from("sol_pool"), mintAddr.publicKey.toBuffer()],
+      program.programId
+    );
+    const tokenPool = await getAssociatedTokenAddress(
+      mintAddr.publicKey,
+      solPool,
+      true,
+      TOKEN_2022_PROGRAM_ID
+    );
+
+    const bunding = await program.account.bondingCurve.fetch(bondingCurve);
+    const price = bunding.virtualSolReserves.div(bunding.virtualTokenReserves);
+
+    console.log(
+      await program.account.initializeConfiguration.fetch(globalConfiguration)
+    );
+    console.log(
+      "bunding == > ",
+      bunding.virtualSolReserves,
+      bunding.virtualTokenReserves
+    );
+    console.log("bunding == > ", price);
+    // Add your test here.
+    const tx = await program.methods
+      .buy(new BN(8 * LAMPORTS_PER_SOL)) //   buy 0.1 sol
+      .accounts({
+        globalConfiguration: globalConfiguration,
+        bondingCurve: bondingCurve,
+        mintAddr: mintAddr.publicKey,
+        userAta: userAta,
+        solPool: solPool,
+        tokenPool: tokenPool,
+        feeAccount: feeAccount.publicKey,
+        tokenProgram: TOKEN_2022_PROGRAM_ID,
+      })
+      .signers([payer])
+      .transaction();
+
+    tx.feePayer = payer.publicKey;
+    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+
+    console.log(await connection.simulateTransaction(tx));
+
+    const sig = await sendAndConfirmTransaction(connection, tx, [payer]);
+    console.log(sig);
+  });
+
+  it("remove liquidity", async () => {
+    userNativeAta = await getAssociatedTokenAddress(
+      NATIVE_MINT,
+      payer.publicKey
+    );
+    const [globalConfiguration] = PublicKey.findProgramAddressSync(
+      [Buffer.from("global_config")],
+      program.programId
+    );
+    const [bondingCurve] = PublicKey.findProgramAddressSync(
+      [Buffer.from("bonding_curve"), mintAddr.publicKey.toBuffer()],
+      program.programId
+    );
+    const [solPool] = PublicKey.findProgramAddressSync(
+      [Buffer.from("sol_pool"), mintAddr.publicKey.toBuffer()],
       program.programId
     );
     const tokenPool = await getAssociatedTokenAddress(

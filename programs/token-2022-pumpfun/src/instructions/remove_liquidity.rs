@@ -4,14 +4,15 @@ use anchor_lang::{
     prelude::*,
     solana_program::{self, system_instruction},
 };
-use anchor_spl::{associated_token::AssociatedToken, token::{ spl_token, transfer_checked, Mint, Token, TokenAccount, TransferChecked}};
 
+use anchor_spl::{
+    associated_token::AssociatedToken, token::{spl_token, Token}, token_2022:: Token2022, token_interface::{transfer_checked, Mint, TokenAccount, TransferChecked}
+};
 
 use crate::states::{BondingCurve, InitializeConfiguration};
 
 
 #[derive(Accounts)]
-#[instruction(sol_bump : u8)]
 pub struct RemoveLiquidity<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
@@ -25,12 +26,13 @@ pub struct RemoveLiquidity<'info> {
     pub global_configuration: Account<'info, InitializeConfiguration>,
     #[account(        
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX],
+        seeds = [BondingCurve::POOL_SEED_PREFIX, amm_coin_mint.key().as_ref()],
         bump,
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
     #[account(mut)]
-    pub amm_coin_mint: Box<Account<'info, Mint>>,
+    pub amm_coin_mint: InterfaceAccount<'info, Mint>,
+    /// CHECK:
     #[account(
         mut,
         seeds = [
@@ -38,38 +40,35 @@ pub struct RemoveLiquidity<'info> {
         ],
         bump,
     )]
-    /// CHECK:
     pub sol_pool: AccountInfo<'info>,
     #[account(       
         mut,         
         associated_token::mint = amm_coin_mint,
-        associated_token::authority = sol_pool
+        associated_token::authority = sol_pool,
+        associated_token::token_program = token_program 
     )]
-    pub token_pool: Box<Account<'info, TokenAccount>>,
+    pub token_pool: Box<InterfaceAccount<'info, TokenAccount>>,
     #[account(
         mut,
         associated_token::mint = amm_coin_mint,
-        associated_token::authority = sol_pool.owner,
+        associated_token::authority = payer,
+        associated_token::token_program = token_program 
     )]
-    pub user_token_coin: Box<Account<'info, TokenAccount>>,
+    pub user_token_coin: Box<InterfaceAccount<'info, TokenAccount>>,
     /// CHECK:
+    #[account(mut)]
     pub user_token_pc: AccountInfo<'info>,
     /// CHECK:
     pub user_wallet: AccountInfo<'info>,
 
-    pub token_program: Program<'info, Token>,
-
-    /// CHECK:
-    pub spl_token_program: AccountInfo<'info>,
+    pub token_program: Program<'info, Token2022>,
+    pub spl_token_program: Program<'info, Token>,
     
+    #[account(mut)]
+    pub payer: Signer<'info>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-
     pub system_program: Program<'info, System>,
-
     pub sysvar_rent: Sysvar<'info, Rent>,
-    // #[account(mut)]
-    // pub mint_addr: Box<Account<'info, Mint>>,
-
 }
 
 impl<'info> RemoveLiquidity<'info> {
@@ -100,27 +99,27 @@ impl<'info> RemoveLiquidity<'info> {
                 self.system_program.to_account_info(),
             ],
             &[&[
-                &self.amm_coin_mint.key().to_bytes(),
                 b"sol_pool",
+                &self.amm_coin_mint.key().to_bytes(),
                 &[sol_bump],
             ]],
         )?;
 
         // Sync native tokens to ensure proper balance
-        let sync_native_ix =
-            spl_token::instruction::sync_native(&spl_token::id(), &self.user_token_pc.key)?;
-        anchor_lang::solana_program::program::invoke_signed(
-            &sync_native_ix,
-            &[
-                self.user_token_pc.to_account_info(),
-                self.token_program.to_account_info(),
-            ],
-            &[&[
-                &self.amm_coin_mint.key().to_bytes(),
-                b"sol_pool",
-                &[sol_bump],
-            ]],
-        )?;
+        // let sync_native_ix =
+        //     spl_token::instruction::sync_native(&spl_token::id(), &self.user_token_pc.key)?;
+        // anchor_lang::solana_program::program::invoke_signed(
+        //     &sync_native_ix,
+        //     &[
+        //         self.user_token_pc.to_account_info(),
+        //         self.token_program.to_account_info(),
+        //     ],
+        //     &[&[
+        //         b"sol_pool",
+        //         &self.amm_coin_mint.key().to_bytes(),
+        //         &[sol_bump],
+        //     ]],
+        // )?;
 
         transfer_checked(
             CpiContext::new_with_signer(
@@ -131,8 +130,8 @@ impl<'info> RemoveLiquidity<'info> {
                     to: self.user_token_coin.to_account_info(),
                     mint: self.amm_coin_mint.to_account_info(),
                 },&[&[
-                    &self.amm_coin_mint.key().to_bytes(), // Mint address seed
                     b"sol_pool",
+                    &self.amm_coin_mint.key().to_bytes(), // Mint address seed
                     &[sol_bump], // Constant seed
                 ]],
             ),
