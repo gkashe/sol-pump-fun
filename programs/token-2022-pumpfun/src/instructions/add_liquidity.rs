@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Token, transfer_checked, Mint, TokenAccount, TransferChecked};
+use anchor_spl::{ token_interface::{Mint, TokenAccount, TransferChecked, transfer_checked},
+    token_2022::Token2022};
 
 use crate::states::{BondingCurve, InitializeConfiguration};
 
@@ -19,7 +20,9 @@ pub struct AddLiquidity<'info> {
 
     #[account(
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
+        seeds = [
+            b"sol_pool", mint_addr.key().as_ref()
+        ],
         bump,
     )]
     /// CHECK:
@@ -30,29 +33,31 @@ pub struct AddLiquidity<'info> {
 
     #[account(        
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX],
+        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
 
     #[account(mut)]
-    pub mint_addr: Box<Account<'info, Mint>>,
+    pub mint_addr: InterfaceAccount<'info, Mint>,
 
     #[account(
         mut,
         associated_token::mint = mint_addr,
         associated_token::authority = payer,
+        associated_token::token_program = token_program 
     )]
-    pub user_ata: Box<Account<'info, TokenAccount>>,
+    pub user_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(       
         mut,         
         associated_token::mint = mint_addr,
-        associated_token::authority = sol_pool
+        associated_token::authority = sol_pool,
+        associated_token::token_program = token_program 
     )]
-    pub token_pool: Box<Account<'info, TokenAccount>>,
+    pub token_pool:Box<InterfaceAccount<'info, TokenAccount>>,
 
-    pub token_program: Program<'info, Token>,
+    pub token_program: Program<'info, Token2022>,
 }
 
 impl<'info> AddLiquidity<'info> {

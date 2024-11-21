@@ -4,7 +4,11 @@ use anchor_lang::{
     prelude::*,
     solana_program::{native_token::LAMPORTS_PER_SOL, system_instruction},
 };
-use anchor_spl::token::{Token, transfer_checked, Mint, TokenAccount,  TransferChecked};
+
+use anchor_spl::{
+     token_2022:: Token2022, token_interface::{Mint, TokenAccount,transfer_checked,TransferChecked}
+};
+
 
 use crate::{
     
@@ -28,43 +32,48 @@ pub struct Buy<'info> {
 
     #[account(        
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX],
+        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
 
     #[account(mut)]
-    pub mint_addr: Box<Account<'info, Mint>>,
+    pub mint_addr: InterfaceAccount<'info, Mint>,
 
-    #[account(
+     #[account(
         mut,
         associated_token::mint = mint_addr,
         associated_token::authority = payer,
+        associated_token::token_program = token_program 
     )]
-    pub user_ata: Box<Account<'info, TokenAccount>>,
+    pub user_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
+    /// CHECK:
     #[account(
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
+        seeds = [
+            b"sol_pool", mint_addr.key().as_ref()
+        ],
         bump,
     )]
-    /// CHECK:
-    pub sol_pool: AccountInfo<'info>,
+    pub sol_pool: SystemAccount<'info>,
 
     #[account(       
         mut,         
         associated_token::mint = mint_addr,
-        associated_token::authority = sol_pool
+        associated_token::authority = sol_pool,
+        associated_token::token_program = token_program 
     )]
-    pub token_pool: Box<Account<'info, TokenAccount>>,
+    pub token_pool: Box<InterfaceAccount<'info, TokenAccount>>,
 
     /// CHECK:
+    #[account(mut)]
     pub fee_account: AccountInfo<'info>,
 
     #[account(mut)]
     pub payer: Signer<'info>,
     
-    pub token_program: Program<'info, Token>,
+    pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
 
     
@@ -98,7 +107,7 @@ impl<'info> Buy<'info> {
             &transfer_instruction,
             &[
                 self.payer.to_account_info(),
-                self.sol_pool.clone(),
+                self.sol_pool.to_account_info(),
                 self.system_program.to_account_info(),
             ],
         )?;

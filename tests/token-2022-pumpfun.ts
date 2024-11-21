@@ -48,8 +48,10 @@ describe("token-2022-pumpfun", () => {
     console.log(
       `Requesting airdrop to admin for 1SOL : ${payer.publicKey.toBase58()}`
     );
+
     await airdrop(payer.publicKey, airdropAmount);
     await airdrop(feeAccount.publicKey, airdropAmount);
+
     const adminBalance =
       (await connection.getBalance(feeAccount.publicKey)) / 10 ** 9;
     console.log("admin wallet balance : ", adminBalance, "SOL");
@@ -218,11 +220,11 @@ describe("token-2022-pumpfun", () => {
       program.programId
     );
     const [bondingCurve] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("bonding_curve")],
+      [Buffer.from("bonding_curve"), mintAddr.publicKey.toBuffer()],
       program.programId
     );
     const [solPool] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("sol_pool")],
+      [Buffer.from("sol_pool"), mintAddr.publicKey.toBuffer()],
       program.programId
     );
     const tokenPool = await getAssociatedTokenAddress(
@@ -271,13 +273,14 @@ describe("token-2022-pumpfun", () => {
       program.programId
     );
     const [bondingCurve] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("bonding_curve")],
+      [Buffer.from("bonding_curve"), mintAddr.publicKey.toBuffer()],
       program.programId
     );
     const [solPool] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("sol_pool")],
+      [Buffer.from("sol_pool"), mintAddr.publicKey.toBuffer()],
       program.programId
     );
+    // await airdrop(solPool, 10 ** 11);
     const tokenPool = await getAssociatedTokenAddress(
       mintAddr.publicKey,
       solPool,
@@ -297,6 +300,9 @@ describe("token-2022-pumpfun", () => {
       bunding.virtualTokenReserves
     );
     console.log("bunding == > ", price);
+
+    console.log(solPool);
+
     // Add your test here.
     const tx = await program.methods
       .buy(new BN(2 * 10 ** 8)) //   buy 0.1 sol
@@ -376,62 +382,62 @@ describe("token-2022-pumpfun", () => {
     console.log(sig);
   });
 
-  it("buy", async () => {
-    const [globalConfiguration] = PublicKey.findProgramAddressSync(
-      [Buffer.from("global_config")],
-      program.programId
-    );
-    const [bondingCurve] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("bonding_curve")],
-      program.programId
-    );
-    const [solPool] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("sol_pool")],
-      program.programId
-    );
-    const tokenPool = await getAssociatedTokenAddress(
-      mintAddr.publicKey,
-      solPool,
-      true,
-      TOKEN_2022_PROGRAM_ID
-    );
+  // it("buy", async () => {
+  //   const [globalConfiguration] = PublicKey.findProgramAddressSync(
+  //     [Buffer.from("global_config")],
+  //     program.programId
+  //   );
+  //   const [bondingCurve] = PublicKey.findProgramAddressSync(
+  //     [mintAddr.publicKey.toBuffer(), Buffer.from("bonding_curve")],
+  //     program.programId
+  //   );
+  //   const [solPool] = PublicKey.findProgramAddressSync(
+  //     [mintAddr.publicKey.toBuffer(), Buffer.from("sol_pool")],
+  //     program.programId
+  //   );
+  //   const tokenPool = await getAssociatedTokenAddress(
+  //     mintAddr.publicKey,
+  //     solPool,
+  //     true,
+  //     TOKEN_2022_PROGRAM_ID
+  //   );
 
-    const bunding = await program.account.bondingCurve.fetch(bondingCurve);
-    const price = bunding.virtualSolReserves.div(bunding.virtualTokenReserves);
+  //   const bunding = await program.account.bondingCurve.fetch(bondingCurve);
+  //   const price = bunding.virtualSolReserves.div(bunding.virtualTokenReserves);
 
-    console.log(
-      await program.account.initializeConfiguration.fetch(globalConfiguration)
-    );
-    console.log(
-      "bunding == > ",
-      bunding.virtualSolReserves,
-      bunding.virtualTokenReserves
-    );
-    console.log("bunding == > ", price);
-    // Add your test here.
-    const tx = await program.methods
-      .buy(new BN(8 * LAMPORTS_PER_SOL)) //   buy 0.1 sol
-      .accounts({
-        globalConfiguration: globalConfiguration,
-        bondingCurve: bondingCurve,
-        mintAddr: mintAddr.publicKey,
-        userAta: userAta,
-        solPool: solPool,
-        tokenPool: tokenPool,
-        feeAccount: feeAccount.publicKey,
-        tokenProgram: TOKEN_2022_PROGRAM_ID,
-      })
-      .signers([payer])
-      .transaction();
+  //   console.log(
+  //     await program.account.initializeConfiguration.fetch(globalConfiguration)
+  //   );
+  //   console.log(
+  //     "bunding == > ",
+  //     bunding.virtualSolReserves,
+  //     bunding.virtualTokenReserves
+  //   );
+  //   console.log("bunding == > ", price);
+  //   // Add your test here.
+  //   const tx = await program.methods
+  //     .buy(new BN(8 * LAMPORTS_PER_SOL)) //   buy 0.1 sol
+  //     .accounts({
+  //       globalConfiguration: globalConfiguration,
+  //       bondingCurve: bondingCurve,
+  //       mintAddr: mintAddr.publicKey,
+  //       userAta: userAta,
+  //       solPool: solPool,
+  //       tokenPool: tokenPool,
+  //       feeAccount: feeAccount.publicKey,
+  //       tokenProgram: TOKEN_2022_PROGRAM_ID,
+  //     })
+  //     .signers([payer])
+  //     .transaction();
 
-    tx.feePayer = payer.publicKey;
-    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+  //   tx.feePayer = payer.publicKey;
+  //   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
-    console.log(await connection.simulateTransaction(tx));
+  //   console.log(await connection.simulateTransaction(tx));
 
-    const sig = await sendAndConfirmTransaction(connection, tx, [payer]);
-    console.log(sig);
-  });
+  //   const sig = await sendAndConfirmTransaction(connection, tx, [payer]);
+  //   console.log(sig);
+  // });
 
   it("remove liquidity", async () => {
     const [globalConfiguration] = PublicKey.findProgramAddressSync(
