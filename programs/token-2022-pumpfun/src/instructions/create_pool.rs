@@ -20,9 +20,7 @@ pub struct CreatePool<'info> {
     //  **  contact on https://t.me/wizardev
     //  **
     #[account(
-        init,
-        space = InitializeConfiguration::SIZE,
-        payer = payer,
+        mut,
         seeds = [InitializeConfiguration::SEEDS],
         bump,
     )]
