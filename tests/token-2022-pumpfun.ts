@@ -334,11 +334,11 @@ describe("token-2022-pumpfun", () => {
       program.programId
     );
     const [bondingCurve] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("bonding_curve")],
+      [Buffer.from("bonding_curve"), mintAddr.publicKey.toBuffer()],
       program.programId
     );
     const [solPool] = PublicKey.findProgramAddressSync(
-      [mintAddr.publicKey.toBuffer(), Buffer.from("sol_pool")],
+      [Buffer.from("sol_pool"), mintAddr.publicKey.toBuffer()],
       program.programId
     );
     const tokenPool = await getAssociatedTokenAddress(

@@ -23,6 +23,7 @@ buy = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g buy"
 create-pool = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g create pool"
 mint = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g token-mint"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g "
+sell = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g sell"
 
 [test]
 startup_wait = 20000

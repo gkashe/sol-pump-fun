@@ -5,7 +5,7 @@ use anchor_lang::{
     solana_program::{native_token::LAMPORTS_PER_SOL, system_instruction},
 };
 use anchor_spl::{
-    token::{Token, transfer_checked, Mint, TokenAccount,  TransferChecked}
+     token_2022:: Token2022, token_interface::{Mint, TokenAccount,transfer_checked,TransferChecked}
 };
 
 use crate::{    
@@ -15,7 +15,7 @@ use crate::{
 };
 
 #[derive(Accounts)]
-#[instruction(in_amount: u64, bump: u8)]
+#[instruction(in_amount: u64)]
 pub struct Sell<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
@@ -27,46 +27,50 @@ pub struct Sell<'info> {
     )]
     pub global_configuration: Account<'info, InitializeConfiguration>,
 
-    #[account(        
+     #[account(        
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX],
+        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
 
     #[account(mut)]
-    pub mint_addr: Box<Account<'info, Mint>>,
+    pub mint_addr: InterfaceAccount<'info, Mint>,
 
     #[account(
         mut,
         associated_token::mint = mint_addr,
         associated_token::authority = payer,
+        associated_token::token_program = token_program 
     )]
-    pub user_ata: Box<Account<'info, TokenAccount>>,
+    pub user_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
-     #[account(
+
+    /// CHECK:
+    #[account(
         mut,
         seeds = [
             b"sol_pool", mint_addr.key().as_ref()
         ],
         bump,
     )]
-    /// CHECK:
     pub sol_pool: AccountInfo<'info>,
 
-    #[account(       
+   #[account(       
         mut,         
         associated_token::mint = mint_addr,
-        associated_token::authority = sol_pool
+        associated_token::authority = sol_pool,
+        associated_token::token_program = token_program 
     )]
-    pub token_pool: Box<Account<'info, TokenAccount>>,
+    pub token_pool: Box<InterfaceAccount<'info, TokenAccount>>,
    
     /// CHECK:
+    #[account(mut)]
     pub fee_account: AccountInfo<'info>,
-    
+
     #[account(mut)]
     pub payer: Signer<'info>,    
-    pub token_program: Program<'info, Token>,
+    pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>
     
 }
@@ -119,8 +123,8 @@ impl<'info> Sell<'info> {
                 self.system_program.to_account_info(),
             ],
             &[&[
-                &self.mint_addr.key().to_bytes(), // Mint address seed
                 b"sol_pool",
+                &self.mint_addr.key().to_bytes(), // Mint address seed
                 &[bump], // Constant seed
             ]],
         )?;
@@ -139,8 +143,8 @@ impl<'info> Sell<'info> {
                 self.system_program.to_account_info(),
             ],
             &[&[
-                &self.mint_addr.key().to_bytes(), // Mint address seed
                 b"sol_pool",
+                &self.mint_addr.key().to_bytes(), // Mint address seed
                 &[bump], // Constant seed
             ]],
         )?;
