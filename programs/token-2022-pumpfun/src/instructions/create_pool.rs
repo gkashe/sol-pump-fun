@@ -6,7 +6,8 @@ use anchor_lang::{
 };
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token::{Mint, TokenAccount, Token},
+    token_interface::{Mint, TokenAccount},
+    token_2022::Token2022
 };
 
 use crate::{
@@ -30,41 +31,43 @@ pub struct CreatePool<'info> {
         init,
         space = BondingCurve::SIZE,
         payer = payer,
-        seeds = [BondingCurve::POOL_SEED_PREFIX],
+        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
     #[account(mut)]
-    pub mint_addr: Box<Account<'info, Mint>>,
+    pub mint_addr: InterfaceAccount<'info, Mint>,
     #[account(
         mut,
         associated_token::mint = mint_addr,
         associated_token::authority = payer,
+        associated_token::token_program = token_program 
     )]
-    pub user_ata: Box<Account<'info, TokenAccount>>,
+    pub user_ata: Box<InterfaceAccount<'info, TokenAccount>>,
     #[account(
         mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
+        seeds = [
+            b"sol_pool", mint_addr.key().as_ref()
+        ],
         bump,
     )]
-    /// CHECK:
-    pub sol_pool: AccountInfo<'info>,
+    pub sol_pool: SystemAccount<'info>,
     #[account(       
-        mut,         
+        init,
+        payer = payer,       
         associated_token::mint = mint_addr,
         associated_token::authority = sol_pool
     )]
-    pub token_pool: Box<Account<'info, TokenAccount>>,
+    pub token_pool: Box<InterfaceAccount<'info, TokenAccount>>,
     /// CHECK:
     #[account(mut)]
     pub fee_account: AccountInfo<'info>,
     
     #[account(mut)]
     pub payer: Signer<'info>,
-    pub token_program: Program<'info, Token>,
+    pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
-
-    
+    pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 impl<'info> CreatePool<'info> {
