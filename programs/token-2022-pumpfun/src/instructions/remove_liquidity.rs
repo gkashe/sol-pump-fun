@@ -4,7 +4,7 @@ use anchor_lang::{
     prelude::*,
     solana_program::{self, system_instruction},
 };
-use anchor_spl::token::{ spl_token, Token, transfer_checked, Mint, TokenAccount,  TransferChecked};
+use anchor_spl::{associated_token::AssociatedToken, token::{ spl_token, transfer_checked, Mint, Token, TokenAccount, TransferChecked}};
 
 
 use crate::states::{BondingCurve, InitializeConfiguration};
@@ -23,51 +23,49 @@ pub struct RemoveLiquidity<'info> {
         bump,
     )]
     pub global_configuration: Account<'info, InitializeConfiguration>,
-
-    #[account(
-        mut,
-        seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
-        bump,
-    )]
-    /// CHECK:
-    pub sol_pool: AccountInfo<'info>,
-    /// CHECK:
-    pub user_token_pc: AccountInfo<'info>,
-    /// CHECK:
-    pub user_wallet: AccountInfo<'info>,
-
-    pub system_program: Program<'info, System>,
-
-    #[account(mut)]
-    pub mint_addr: Box<Account<'info, Mint>>,
-
     #[account(        
         mut,
         seeds = [BondingCurve::POOL_SEED_PREFIX],
         bump,
     )]
     pub bonding_curve: Box<Account<'info, BondingCurve>>,
-
     #[account(mut)]
     pub amm_coin_mint: Box<Account<'info, Mint>>,
-
     #[account(
         mut,
-        associated_token::mint = mint_addr,
-        associated_token::authority = sol_pool.owner,
+        seeds = [BondingCurve::POOL_SEED_PREFIX, amm_coin_mint.key().as_ref()],
+        bump,
     )]
-    pub user_token_coin: Box<Account<'info, TokenAccount>>,
-
+    /// CHECK:
+    pub sol_pool: AccountInfo<'info>,
     #[account(       
         mut,         
-        associated_token::mint = mint_addr,
+        associated_token::mint = amm_coin_mint,
         associated_token::authority = sol_pool
     )]
     pub token_pool: Box<Account<'info, TokenAccount>>,
+    #[account(
+        mut,
+        associated_token::mint = amm_coin_mint,
+        associated_token::authority = sol_pool.owner,
+    )]
+    pub user_token_coin: Box<Account<'info, TokenAccount>>,
+    /// CHECK:
+    pub user_token_pc: AccountInfo<'info>,
+    /// CHECK:
+    pub user_wallet: AccountInfo<'info>,
 
     pub token_program: Program<'info, Token>,
 
+    pub spl_token_program: AccountInfo<'info>,
     
+    pub associated_token_program: Program<'info, AssociatedToken>,
+
+    pub system_program: Program<'info, System>,
+
+    pub sysvar_rent: Sysvar<'info, Rent>,
+    // #[account(mut)]
+    // pub mint_addr: Box<Account<'info, Mint>>,
 
 }
 
