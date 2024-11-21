@@ -5,17 +5,17 @@ use anchor_lang::{
     solana_program::{native_token::LAMPORTS_PER_SOL, system_instruction},
 };
 use anchor_spl::{
-    associated_token::AssociatedToken, token::Token, token_interface::{transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked}
+    token::{Token, transfer_checked, Mint, TokenAccount,  TransferChecked}
 };
 
-use crate::{
-    errors::RaydiumPumpfunError,
+use crate::{    
     events::BondingCurveCompleted,
     states::{BondingCurve, InitializeConfiguration},
     utils::calc_swap_quote,
 };
 
 #[derive(Accounts)]
+#[instruction(in_amount: u64, bump: u8)]
 pub struct Sell<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
@@ -32,6 +32,7 @@ pub struct Sell<'info> {
         seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
+    /// CHECK:
     pub sol_pool: AccountInfo<'info>,
 
     #[account(        
@@ -62,7 +63,7 @@ pub struct Sell<'info> {
         associated_token::authority = sol_pool
     )]
     pub token_pool: Box<Account<'info, TokenAccount>>,
-
+    /// CHECK:
     pub fee_account: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>,
@@ -163,7 +164,7 @@ impl<'info> Sell<'info> {
         {
             self.bonding_curve.complete = true;
             emit!(BondingCurveCompleted {
-                mintAddr: self.mint_addr.key()
+                mint_addr: self.mint_addr.key()
             })
         }
 

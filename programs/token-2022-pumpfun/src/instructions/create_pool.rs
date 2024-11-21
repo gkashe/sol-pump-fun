@@ -1,20 +1,17 @@
 use anchor_lang::{
     prelude::*,
-    solana_program::{
-        program::invoke_signed,
+    solana_program::{        
         system_instruction::{self, transfer},
     },
 };
-use anchor_spl::{
-    associated_token::AssociatedToken, token_interface::{TokenInterface , TokenAccount , Mint}
-};
+use anchor_spl::token::Mint;
 
 use crate::{
-    states::{BondingCurve, InitializeConfiguration},
-    FEE_SEED,
+    states::{BondingCurve, InitializeConfiguration},    
 };
 
 #[derive(Accounts)]
+#[instruction(fee_lamports: u64)]
 pub struct CreatePool<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
@@ -30,7 +27,7 @@ pub struct CreatePool<'info> {
 
     #[account(mut)]
     pub payer: Signer<'info>,    
-
+    /// CHECK:
     pub fee_account: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>,
@@ -69,10 +66,10 @@ impl<'info> CreatePool<'info> {
             &[],
         )?;
 
-        &self.bonding_curve.init(
+        self.bonding_curve.init(
             self.mint_addr.supply,
             self.global_configuration.initial_virtual_sol,
-        );
+        )?;
 
         Ok(())
     }

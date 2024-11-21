@@ -1,7 +1,6 @@
 use anchor_lang::prelude::*;
 
-
 #[event]
 pub struct BondingCurveCompleted {
-    pub mintAddr: Pubkey,
+    pub mint_addr: Pubkey,
 }

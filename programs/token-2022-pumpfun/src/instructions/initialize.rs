@@ -1,12 +1,8 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{
-    associated_token::AssociatedToken,
-    token::{Mint, Token, TokenAccount},
-};
 
 use crate::{
     consts::InitializeConfigurationParam, errors::RaydiumPumpfunError,
-    states::InitializeConfiguration, FEE_SEED,
+    states::InitializeConfiguration,
 };
 
 #[derive(Accounts)]
@@ -53,7 +49,7 @@ impl<'info> Initialize<'info> {
             RaydiumPumpfunError::MissMatchingValue
         );
 
-        self.global_configuration.set_value(param);
+        self.global_configuration.set_value(param)?;
 
         Ok(())
     }

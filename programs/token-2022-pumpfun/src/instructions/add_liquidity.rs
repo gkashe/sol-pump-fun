@@ -1,14 +1,10 @@
-use anchor_lang::{prelude::*, solana_program::system_instruction};
-use anchor_spl::{
-    associated_token::AssociatedToken,
-    token::Token,
-    token_2022,
-    token_interface::{transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked},
-};
+use anchor_lang::prelude::*;
+use anchor_spl::token::{Token, transfer_checked, Mint, TokenAccount, TransferChecked};
 
 use crate::states::{BondingCurve, InitializeConfiguration};
 
 #[derive(Accounts)]
+#[instruction(token_amount: u64, raydium_token_amount: u64)]
 pub struct AddLiquidity<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
@@ -26,6 +22,7 @@ pub struct AddLiquidity<'info> {
         seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
+    /// CHECK:
     pub sol_pool: AccountInfo<'info>,
 
     #[account(mut)]

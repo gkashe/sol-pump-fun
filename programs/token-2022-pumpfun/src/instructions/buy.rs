@@ -1,21 +1,20 @@
-use std::ops::{Div, Mul};
+use std::ops::Div;
 
 use anchor_lang::{
     prelude::*,
     solana_program::{native_token::LAMPORTS_PER_SOL, system_instruction},
 };
-use anchor_spl::{
-    associated_token::AssociatedToken, token::Token, token_interface::{transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked}
-};
+use anchor_spl::token::{Token, transfer_checked, Mint, TokenAccount,  TransferChecked};
 
 use crate::{
-    errors::RaydiumPumpfunError,
+    
     events::BondingCurveCompleted,
     states::{BondingCurve, InitializeConfiguration},
     utils::calc_swap_quote,
 };
 
 #[derive(Accounts)]
+#[instruction(in_amount: u64, bump: u8)]
 pub struct Buy<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
@@ -39,6 +38,7 @@ pub struct Buy<'info> {
         seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
+    /// CHECK:
     pub sol_pool: AccountInfo<'info>,
 
     #[account(       
@@ -60,7 +60,7 @@ pub struct Buy<'info> {
         associated_token::authority = payer,
     )]
     pub user_ata: Box<Account<'info, TokenAccount>>,
-
+    /// CHECK:
     pub fee_account: AccountInfo<'info>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
@@ -162,7 +162,7 @@ impl<'info> Buy<'info> {
         {
             self.bonding_curve.complete = true;
             emit!(BondingCurveCompleted {
-                mintAddr: self.mint_addr.key()
+                mint_addr: self.mint_addr.key()
             })
         }
 

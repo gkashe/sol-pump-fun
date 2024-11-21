@@ -1,18 +1,17 @@
-use std::ops::{Div, Mul};
+
 
 use anchor_lang::{
     prelude::*,
     solana_program::{self, system_instruction},
 };
-use anchor_spl::{
-    associated_token::AssociatedToken, token::{self, spl_token, Token}, token_2022::spl_token_2022, token_interface::{transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked}
-};
+use anchor_spl::token::{ spl_token, Token, transfer_checked, Mint, TokenAccount,  TransferChecked};
 
 
 use crate::states::{BondingCurve, InitializeConfiguration};
 
 
 #[derive(Accounts)]
+#[instruction(sol_bump : u8)]
 pub struct RemoveLiquidity<'info> {
     //  **
     //  **  contact on https://t.me/wizardev
@@ -30,9 +29,11 @@ pub struct RemoveLiquidity<'info> {
         seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
+    /// CHECK:
     pub sol_pool: AccountInfo<'info>,
-
+    /// CHECK:
     pub user_token_pc: AccountInfo<'info>,
+    /// CHECK:
     pub user_wallet: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>,
