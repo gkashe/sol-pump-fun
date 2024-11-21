@@ -58,12 +58,12 @@ pub struct Buy<'info> {
     )]
     pub token_pool: Box<Account<'info, TokenAccount>>,
 
-     pub fee_account: AccountInfo<'info>,
+    /// CHECK:
+    pub fee_account: AccountInfo<'info>,
 
     #[account(mut)]
     pub payer: Signer<'info>,
-
-    /// CHECK:
+    
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
 

@@ -59,7 +59,8 @@ pub struct Sell<'info> {
     )]
     pub token_pool: Box<Account<'info, TokenAccount>>,
    
-     pub fee_account: AccountInfo<'info>,
+    /// CHECK:
+    pub fee_account: AccountInfo<'info>,
 
    
 

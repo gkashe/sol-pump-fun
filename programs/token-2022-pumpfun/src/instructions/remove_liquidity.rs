@@ -57,6 +57,7 @@ pub struct RemoveLiquidity<'info> {
 
     pub token_program: Program<'info, Token>,
 
+    /// CHECK:
     pub spl_token_program: AccountInfo<'info>,
     
     pub associated_token_program: Program<'info, AssociatedToken>,

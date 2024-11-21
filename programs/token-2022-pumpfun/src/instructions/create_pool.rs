@@ -49,6 +49,7 @@ pub struct CreatePool<'info> {
         seeds = [BondingCurve::POOL_SEED_PREFIX, mint_addr.key().as_ref()],
         bump,
     )]
+    /// CHECK:
     pub sol_pool: AccountInfo<'info>,
     #[account(       
         mut,         
@@ -56,6 +57,7 @@ pub struct CreatePool<'info> {
         associated_token::authority = sol_pool
     )]
     pub token_pool: Box<Account<'info, TokenAccount>>,
+    /// CHECK:
     #[account(mut)]
     pub fee_account: AccountInfo<'info>,
     
