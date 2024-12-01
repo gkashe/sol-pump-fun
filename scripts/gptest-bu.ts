@@ -508,26 +508,23 @@ async function main() {
 
     program = anchor.workspace.Token2022Pumpfun as Program<Token2022Pumpfun>;
 
-    // await requestAirdrop();
+    await requestAirdrop();
 
     await initialize();
 
-   
-    // await tokenMint();
-    // console.log("mintAddr: ", bs58.encode(mintAddr.secretKey));
-    // console.log("userAta: ", userAta.toBase58());
-    // console.log("userNativeAta: ", userNativeAta.toBase58());
     mintAddr = Keypair.fromSecretKey(
         bs58.decode(
-            "3EqrSSF96KMj5aYjMVH44mH6br4d7RMoG2tC3hhPuLAJcjo3mYUEtdn42md4Krt8WQkD1iTfXNptuh1hXwq1nNis"
+            "JgRxbfyyorMTZxV3Gtaxn3EdGm76w7uqXENiJRxwZywHxzuV2fzLiWFd2R23PdMuTvnW59etkac15xxHggETymz"
         )
     );
     userAta = new PublicKey(
-        "9QSXaK9Xbh5HYVZQe8VCsxA7vaFnsNDktaRN9faQNwG9"
+        "Ck2yo7ZKtbvKkeJhdkFMTJEyjnMkVUL3ewa8DgF4zNu4"
     );
     userNativeAta = new PublicKey(
         "2PJXikmzkd6jz5bsDeTCVN2SYuZihfhKAsGCoRRuLJ4U"
     );
+    await tokenMint();
+
     await createPool();
 
     await addLiquidity();

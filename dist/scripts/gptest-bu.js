@@ -387,18 +387,12 @@ function main() {
         payer = web3_js_1.Keypair.fromSecretKey(new Uint8Array(user1_json_1.default));
         feeAccount = web3_js_1.Keypair.fromSecretKey(new Uint8Array(user2_json_1.default));
         program = anchor.workspace.Token2022Pumpfun;
-        // await requestAirdrop();
+        yield requestAirdrop();
         yield initialize();
-        yield tokenMint();
-        console.log("mintAddr: ", bytes_1.bs58.encode(mintAddr.secretKey));
-        console.log("userAta: ", userAta.toBase58());
-        console.log("userNativeAta: ", userNativeAta.toBase58());
         mintAddr = web3_js_1.Keypair.fromSecretKey(bytes_1.bs58.decode("JgRxbfyyorMTZxV3Gtaxn3EdGm76w7uqXENiJRxwZywHxzuV2fzLiWFd2R23PdMuTvnW59etkac15xxHggETymz"));
         userAta = new web3_js_1.PublicKey("Ck2yo7ZKtbvKkeJhdkFMTJEyjnMkVUL3ewa8DgF4zNu4");
         userNativeAta = new web3_js_1.PublicKey("2PJXikmzkd6jz5bsDeTCVN2SYuZihfhKAsGCoRRuLJ4U");
-        console.log("mintAddr: ", mintAddr.publicKey.toBase58());
-        console.log("userAta: ", userAta.toBase58());
-        console.log("userNativeAta: ", userNativeAta.toBase58());
+        yield tokenMint();
         yield createPool();
         yield addLiquidity();
         yield buy();
@@ -408,4 +402,4 @@ function main() {
     });
 }
 main();
-//# sourceMappingURL=gptest.js.map
+//# sourceMappingURL=gptest-bu.js.map
