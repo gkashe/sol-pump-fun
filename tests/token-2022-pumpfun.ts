@@ -1,5 +1,10 @@
+import * as dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
 import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
+import { BN, Program } from "@coral-xyz/anchor";
 import { Token2022Pumpfun } from "../target/types/token_2022_pumpfun";
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import {
@@ -22,7 +27,7 @@ import {
   sendAndConfirmTransaction,
   SYSVAR_RENT_PUBKEY,
 } from "@solana/web3.js";
-import { BN } from "bn.js";
+
 import { ASSOCIATED_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { SYSTEM_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/native/system";
 import key1 from "./keys/user1.json";
@@ -57,7 +62,7 @@ describe("token-2022-pumpfun", () => {
     console.log("admin wallet balance : ", adminBalance, "SOL");
   });
 
-  it("Is initialized!", async () => {
+  it("Is initialized", async () => {
     const [globalConfiguration] = PublicKey.findProgramAddressSync(
       [Buffer.from("global_config")],
       program.programId
@@ -82,7 +87,7 @@ describe("token-2022-pumpfun", () => {
       .accounts({
         globalConfiguration: globalConfiguration,
         feeAccount: feeAccount,
-      })
+      } as any)
       .signers([payer])
       .transaction();
 
@@ -202,7 +207,7 @@ describe("token-2022-pumpfun", () => {
         feeAccount: feeAccount.publicKey,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      })
+      } as any)
       .signers([payer])
       .transaction();
 
@@ -246,7 +251,7 @@ describe("token-2022-pumpfun", () => {
         solPool: solPool,
         tokenPool: tokenPool,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
-      })
+      } as any)
       .signers([payer])
       .transaction();
 
@@ -316,7 +321,7 @@ describe("token-2022-pumpfun", () => {
         tokenPool: tokenPool,
         feeAccount: feeAccount.publicKey,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
-      })
+      } as any)
       .signers([payer])
       .transaction();
 
@@ -370,7 +375,7 @@ describe("token-2022-pumpfun", () => {
         tokenPool: tokenPool,
         feeAccount: feeAccount.publicKey,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
-      })
+      } as any)
       .signers([payer])
       .transaction();
 
@@ -427,7 +432,7 @@ describe("token-2022-pumpfun", () => {
         tokenPool: tokenPool,
         feeAccount: feeAccount.publicKey,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
-      })
+      } as any)
       .signers([payer])
       .transaction();
 
@@ -485,7 +490,7 @@ describe("token-2022-pumpfun", () => {
         associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
         systemProgram: SYSTEM_PROGRAM_ID,
         sysvarRent: SYSVAR_RENT_PUBKEY,
-      })
+      } as any)
       .preInstructions([
         ComputeBudgetProgram.setComputeUnitLimit({
           units: 1_000_000,

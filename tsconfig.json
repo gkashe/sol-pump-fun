@@ -5,6 +5,7 @@
       "chai"
     ],
     "typeRoots": [
+      "./types",
       "./node_modules/@types"
     ],
     "lib": [
@@ -13,6 +14,16 @@
     "module": "commonjs",
     "target": "es6",
     "esModuleInterop": true,
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "rootDir": "./",
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "paths": {
+      "@solana/codecs-data-structures": ["./types/codecs-data-structures.d.ts"]
+    }
+  },
+  "include": ["scripts/**/*", "tests/**/*", "types/**/*"],
+  "exclude": ["node_modules"]
 }

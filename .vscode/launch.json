@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug TypeScript",
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/node_modules/**"
+            ],
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "program": "${workspaceFolder}/scripts/gptest.ts",
+            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

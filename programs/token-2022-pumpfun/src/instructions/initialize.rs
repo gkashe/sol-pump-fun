@@ -33,6 +33,12 @@ impl<'info> Initialize<'info> {
         let sol_amount_for_token_creator_after_bc =
             param.sol_amount_for_token_creator_after_bc.clone();
 
+        msg!("Initializing with parameters:");
+        msg!("Bonding Curve Limitation: {}", bonding_curve_limitation);
+        msg!("SOL Amount for DEX After BC: {}", sol_amount_for_dex_after_bc);
+        msg!("SOL Amount for PumpFun After BC: {}", sol_amount_for_pumpfun_after_bc);
+        msg!("SOL Amount for Token Creator After BC: {}", sol_amount_for_token_creator_after_bc);
+
         msg!(
             "{} : {}",
             bonding_curve_limitation,
@@ -49,6 +55,7 @@ impl<'info> Initialize<'info> {
             RaydiumPumpfunError::MissMatchingValue
         );
 
+        msg!("Setting global configuration values...");
         self.global_configuration.set_value(param)?;
 
         Ok(())
