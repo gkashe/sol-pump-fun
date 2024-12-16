@@ -32,3 +32,9 @@ After hitting the bonding curve , tokens move to Raydium CLMM pool
     <a href="https://t.me/wizardev" target="_blank"><img alt="Telegram"
         src="https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white"/></a>
 </div>
+
+old programid: EJX3Gyp9K23mpVNXG9PYmd3Yw9cpHGmKK6YPLLMM2dy
+
+anchor idl init -f /Users/gp/CascadeProjects/sol-pump-fun/target/idl/token_2022_pumpfun.json 9i6zkRi5MsPvHseF7L8euf4JCdvWNWHvM8ZgKZcSgbWs
+
+And run initialize before others can use it

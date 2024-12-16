@@ -6,25 +6,25 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-token_2022_pumpfun = "EJX3Gyp9K23mpVNXG9PYmd3Yw9cpHGmKK6YPLLMM2dy"
+token_2022_pumpfun = "9i6zkRi5MsPvHseF7L8euf4JCdvWNWHvM8ZgKZcSgbWs"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
-wallet = "/Users/gp/.config/solana/id.json"
+cluster = "Devnet"
+wallet = "~/.config/solana/id.json"
 
 [scripts]
-test = "pnpm ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
-is-initialized = "pnpm ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g Is initialized!"
 add-liquidity = "pnpm ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g add liquidity"
 airdrop = "pnpm ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g Airdrop to admin wallet"
 buy = "pnpm run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g buy"
 create-pool = "pnpm run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g create pool"
+is-initialized = "pnpm ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g Is initialized!"
 mint = "pnpm run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g token-mint"
-sell = "pnpm run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g sell"
 remove-liquidity = "pnpm run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g remove liquidity"
+sell = "pnpm run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts -g sell"
+test = "pnpm ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 
 [test]
 startup_wait = 20000
