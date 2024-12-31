@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    consts::InitializeConfigurationParam, errors::RaydiumPumpfunError,
+    consts::InitializeConfigurationParam,
     states::InitializeConfiguration,
 };
 
@@ -28,33 +28,13 @@ pub struct Initialize<'info> {
 impl<'info> Initialize<'info> {
     pub fn process(&mut self, param: InitializeConfigurationParam) -> Result<()> {
         let bonding_curve_limitation = param.bonding_curve_limitation.clone();
-        let sol_amount_for_dex_after_bc = param.sol_amount_for_dex_after_bc.clone();
-        let sol_amount_for_pumpfun_after_bc = param.sol_amount_for_pumpfun_after_bc.clone();
-        let sol_amount_for_token_creator_after_bc =
-            param.sol_amount_for_token_creator_after_bc.clone();
+        let bonding_curve_slope = param.bonding_curve_slope.clone();
+        let swap_fee = param.swap_fee.clone();
 
         msg!("Initializing with parameters:");
         msg!("Bonding Curve Limitation: {}", bonding_curve_limitation);
-        msg!("SOL Amount for DEX After BC: {}", sol_amount_for_dex_after_bc);
-        msg!("SOL Amount for PumpFun After BC: {}", sol_amount_for_pumpfun_after_bc);
-        msg!("SOL Amount for Token Creator After BC: {}", sol_amount_for_token_creator_after_bc);
-
-        msg!(
-            "{} : {}",
-            bonding_curve_limitation,
-            (sol_amount_for_dex_after_bc
-                + sol_amount_for_pumpfun_after_bc
-                + sol_amount_for_token_creator_after_bc)
-        );
-
-        require_eq!(
-            bonding_curve_limitation,
-            (sol_amount_for_dex_after_bc
-                + sol_amount_for_pumpfun_after_bc
-                + sol_amount_for_token_creator_after_bc),
-            RaydiumPumpfunError::MissMatchingValue
-        );
-
+        msg!("Bonding Curve Slope: {}", bonding_curve_slope);
+        msg!("Bonding Swap Fee: {}", swap_fee);
         msg!("Setting global configuration values...");
         self.global_configuration.set_value(param)?;
 

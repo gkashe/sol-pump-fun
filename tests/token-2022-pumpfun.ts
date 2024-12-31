@@ -68,7 +68,7 @@ describe("token-2022-pumpfun", () => {
       program.programId
     );
     const [feeAccount] = PublicKey.findProgramAddressSync(
-      [Buffer.from("pumpfun_fee")],
+      [Buffer.from("kashe_fee")],
       program.programId
     );
 

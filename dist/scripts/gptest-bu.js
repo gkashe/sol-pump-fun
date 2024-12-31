@@ -104,7 +104,7 @@ function initialize() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const [globalConfiguration] = web3_js_1.PublicKey.findProgramAddressSync([Buffer.from("global_config")], program.programId);
-            const [feeAccount] = web3_js_1.PublicKey.findProgramAddressSync([Buffer.from("pumpfun_fee")], program.programId);
+            const [feeAccount] = web3_js_1.PublicKey.findProgramAddressSync([Buffer.from("kashe_fee")], program.programId);
             // Check if the account already exists
             const accountInfo = yield connection.getAccountInfo(globalConfiguration);
             if (accountInfo !== null) {

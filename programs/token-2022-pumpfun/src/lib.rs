@@ -1,7 +1,6 @@
 use anchor_lang::prelude::*;
 
 pub mod consts;
-pub mod errors;
 pub mod events;
 pub mod instructions;
 pub mod states;
@@ -30,9 +29,8 @@ pub mod token_2022_pumpfun {
     pub fn add_liquidity(
         ctx: Context<AddLiquidity>,
         token_amount: u64,
-        raydium_token_amount: u64,
     ) -> Result<()> {
-        ctx.accounts.process(token_amount, raydium_token_amount)?;
+        ctx.accounts.process(token_amount)?;
         Ok(())
     }
 

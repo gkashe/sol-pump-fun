@@ -77,7 +77,7 @@ describe("token-2022-pumpfun", () => {
     }));
     it("Is initialized", () => __awaiter(void 0, void 0, void 0, function* () {
         const [globalConfiguration] = web3_js_1.PublicKey.findProgramAddressSync([Buffer.from("global_config")], program.programId);
-        const [feeAccount] = web3_js_1.PublicKey.findProgramAddressSync([Buffer.from("pumpfun_fee")], program.programId);
+        const [feeAccount] = web3_js_1.PublicKey.findProgramAddressSync([Buffer.from("kashe_fee")], program.programId);
         const initializeArgu = {
             swapFee: 2.0,
             bondingCurveLimitation: new anchor_1.BN(8 * web3_js_1.LAMPORTS_PER_SOL),

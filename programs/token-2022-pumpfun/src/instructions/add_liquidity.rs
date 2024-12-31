@@ -5,12 +5,8 @@ use anchor_spl::{ token_interface::{Mint, TokenAccount, TransferChecked, transfe
 use crate::states::{BondingCurve, InitializeConfiguration};
 
 #[derive(Accounts)]
-#[instruction(token_amount: u64, raydium_token_amount: u64)]
+#[instruction(token_amount: u64)]
 pub struct AddLiquidity<'info> {
-    //  **
-    //  **  contact on https://t.me/wizardev
-    //  **
-
     #[account(
         mut,
         seeds = [InitializeConfiguration::SEEDS],
@@ -61,7 +57,7 @@ pub struct AddLiquidity<'info> {
 }
 
 impl<'info> AddLiquidity<'info> {
-    pub fn process(&mut self, token_amount: u64, raydium_token_amount: u64) -> Result<()> {
+    pub fn process(&mut self, token_amount: u64) -> Result<()> {
         // Create the transfer instruction
 
         transfer_checked(
@@ -79,14 +75,11 @@ impl<'info> AddLiquidity<'info> {
         )?;
 
         msg!(
-            "Add liquidity virtual {} sol , {} token ",
-            self.global_configuration.initial_virtual_sol,
+            "Add liquidity {} token ",
             token_amount
         );
 
         self.bonding_curve.real_token_reserves += token_amount;
-        self.bonding_curve.raydium_token += raydium_token_amount;
-        self.bonding_curve.virtual_token_reserves += token_amount;
 
         Ok(())
     }

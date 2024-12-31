@@ -17,9 +17,6 @@ use crate::{
 #[derive(Accounts)]
 #[instruction(in_amount: u64)]
 pub struct Sell<'info> {
-    //  **
-    //  **  contact on https://t.me/wizardev
-    //  **
     #[account(
         mut,
         seeds = [InitializeConfiguration::SEEDS],
@@ -77,12 +74,12 @@ pub struct Sell<'info> {
 
 impl<'info> Sell<'info> {
     pub fn process(&mut self, in_amount: u64, bump: u8) -> Result<()> {
+        require_eq!(self.bonding_curve.complete, false);
+
         let estimated_out_token = calc_swap_quote(
             in_amount,
-            self.global_configuration
-                .bonding_curve_limitation
-                .div(100_000),
-            self.bonding_curve.raydium_token.div(100_000),
+            self.bonding_curve.real_sol_reserves,
+            self.global_configuration.bonding_curve_slope,
             false,
         );
 
@@ -156,23 +153,7 @@ impl<'info> Sell<'info> {
         );
 
         self.bonding_curve.real_sol_reserves -= estimated_out_token.div(LAMPORTS_PER_SOL as u64);
-        self.bonding_curve.virtual_sol_reserves -= estimated_out_token.div(LAMPORTS_PER_SOL as u64);
         self.bonding_curve.real_token_reserves += in_amount;
-        self.bonding_curve.virtual_token_reserves += in_amount;
-
-        msg!(
-            "{} , {}",
-            self.bonding_curve.real_sol_reserves,
-            self.global_configuration.bonding_curve_limitation
-        );
-
-        if self.bonding_curve.real_sol_reserves > self.global_configuration.bonding_curve_limitation
-        {
-            self.bonding_curve.complete = true;
-            emit!(BondingCurveCompleted {
-                mint_addr: self.mint_addr.key()
-            })
-        }
 
         Ok(())
     }
