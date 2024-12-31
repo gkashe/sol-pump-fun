@@ -68,9 +68,7 @@ pub struct CreatePool<'info> {
 
 impl<'info> CreatePool<'info> {
     pub fn process(&mut self, fee_lamports: u64) -> Result<()> {
-        self.bonding_curve.init(
-            self.mint_addr.supply
-        )?;
+        self.bonding_curve.init()?;
 
         Ok(())
     }

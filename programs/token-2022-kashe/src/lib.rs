@@ -9,10 +9,10 @@ pub mod utils;
 use crate::consts::*;
 use crate::instructions::*;
 
-declare_id!("681zsZfYS3P2L3eatfEE1XPaMpiqQR9gsAmAbJxWhTYt");
+declare_id!("8jDR5qcFspA1kydVnLRpSguWgWTg7rGBrGfovoKg7c7N");
 
 #[program]
-pub mod token_2022_pumpfun {
+pub mod token_2022_kashe {
 
     use super::*;
 

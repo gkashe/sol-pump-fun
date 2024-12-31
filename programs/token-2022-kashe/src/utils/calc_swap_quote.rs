@@ -8,11 +8,11 @@ pub fn calc_swap_quote(
 ) -> u64 {
     if input_sol {
         ((in_amount as f64)
-            .div(real_sol_reserves as f64)
+            .div(real_sol_reserves as f64 + 6 as f64)
             .mul(bonding_curve_slope as f64)) as u64
     } else {
         ((in_amount as f64)
             .div(bonding_curve_slope as f64)
-            .mul(real_sol_reserves as f64)) as u64
+            .mul(real_sol_reserves as f64 + 6 as f64)) as u64
     }
 }

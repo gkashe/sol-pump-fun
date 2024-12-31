@@ -1,11 +1,10 @@
 {
     "version": "0.2.0",
     "configurations": [
-
         {
             "type": "node",
             "request": "launch",
-            "name": "GPTest",
+            "name": "Kashe",
             "skipFiles": [
                 "<node_internals>/**",
                 "${workspaceFolder}/node_modules/**"
@@ -13,7 +12,7 @@
             "runtimeArgs": [
                 "--nolazy"
             ],
-            "program": "${workspaceFolder}/scripts/gptest.ts",
+            "program": "${workspaceFolder}/scripts/kashe.ts",
             "outFiles": ["${workspaceFolder}/dist/**/*.js"],
             "preLaunchTask": "tsc: build - tsconfig.json",
             "sourceMaps": true,
@@ -37,6 +36,29 @@
                 "--nolazy"
             ],
             "program": "${workspaceFolder}/scripts/check-balance.ts",
+            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "GPTest",
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/node_modules/**"
+            ],
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "program": "${workspaceFolder}/scripts/gptest.ts",
             "outFiles": ["${workspaceFolder}/dist/**/*.js"],
             "preLaunchTask": "tsc: build - tsconfig.json",
             "sourceMaps": true,
