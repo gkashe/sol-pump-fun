@@ -191,23 +191,23 @@ async function tokenMint() {
 async function createPool() {
     try{
         const [globalConfiguration] = PublicKey.findProgramAddressSync(
-            [Buffer.from("global_config")],
-            program.programId
-          );
-          const [bondingCurve] = PublicKey.findProgramAddressSync(
-            [Buffer.from("bonding_curve"), mintAddr.publicKey.toBuffer()],
-            program.programId
-          );
-          const [solPool] = PublicKey.findProgramAddressSync(
-            [Buffer.from("sol_pool"), mintAddr.publicKey.toBuffer()],
-            program.programId
-          );
-          const tokenPool = await getAssociatedTokenAddress(
-            mintAddr.publicKey,
-            solPool,
-            true,
-            TOKEN_2022_PROGRAM_ID
-          );
+          [Buffer.from("global_config")],
+          program.programId
+        );
+        const [bondingCurve] = PublicKey.findProgramAddressSync(
+          [Buffer.from("bonding_curve"), mintAddr.publicKey.toBuffer()],
+          program.programId
+        );
+        const [solPool] = PublicKey.findProgramAddressSync(
+          [Buffer.from("sol_pool"), mintAddr.publicKey.toBuffer()],
+          program.programId
+        );
+        const tokenPool = await getAssociatedTokenAddress(
+          mintAddr.publicKey,
+          solPool,
+          true,
+          TOKEN_2022_PROGRAM_ID
+        );
       
           console.log(mintAddr.publicKey.toBase58());
           console.log({

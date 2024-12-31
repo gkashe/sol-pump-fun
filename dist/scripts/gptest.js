@@ -123,7 +123,7 @@ function initialize() {
                 solAmountForDexAfterBc: new anchor_1.BN(5 * web3_js_1.LAMPORTS_PER_SOL),
                 solAmountForPumpfunAfterBc: new anchor_1.BN(2 * web3_js_1.LAMPORTS_PER_SOL),
                 solAmountForTokenCreatorAfterBc: new anchor_1.BN(1 * web3_js_1.LAMPORTS_PER_SOL),
-                initialVirtualSol: new anchor_1.BN(3 * web3_js_1.LAMPORTS_PER_SOL),
+                initialVirtualSol: new anchor_1.BN(16 * web3_js_1.LAMPORTS_PER_SOL),
             };
             // Add your test here.
             const tx = yield program.methods
@@ -542,7 +542,7 @@ function main() {
         // await publishIdl();
         // await requestAirdrop();
         // await airdrop(new PublicKey('5fkp8siwumxpGxH2UnrNVCGzwEr7aYn7qqXzkfVKYeaZ'),1);
-        // await initialize();
+        yield initialize();
         yield tokenMint();
         console.log("mintAddr: ", bytes_1.bs58.encode(mintAddr.secretKey));
         console.log("userAta: ", userAta.toBase58());
